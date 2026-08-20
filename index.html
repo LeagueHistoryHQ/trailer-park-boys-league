@@ -402,6 +402,8 @@
     .dv-rank, .dv-draft { font-weight: 700; color: var(--text2); }
     .dv-value { font-weight: 800; font-variant-numeric: tabular-nums; }
     .dv-diff { font-weight: 800; }
+    .stat-group { display: contents; }
+    .mobile-label { display: none; }
 
     /* ── Chart ── */
     .chart-wrap { position: relative; width: 100%; height: 240px; }
@@ -595,27 +597,34 @@
       .tile-num .n { font-size: 13px; }
       .tile-num .l { font-size: 8.5px; }
 
-      /* Draft recap: stack team/player onto two lines instead of squeezing one row */
+      /* Draft recap: player, team, pos, then two labeled stat lines */
       .draft-pick-row { flex-wrap: wrap; row-gap: 2px; min-width: 0; }
       .draft-pick-num { order: 1; }
       .draft-pick-team { order: 2; width: auto; flex: 1; }
-      .draft-pick-meta { order: 3; }
       .draft-pick-player {
-        order: 4; flex: 1 1 100%; width: 100%; min-width: 0;
+        order: 3; flex: 1 1 100%; width: 100%; min-width: 0;
         padding-left: 40px; font-size: 12.5px; color: var(--text2); font-weight: 600;
       }
+      .draft-pick-meta { order: 4; padding-left: 40px; }
 
-      /* Draft value: player name on its own line, stats evenly spaced below */
+      /* Draft value: player, team, then two labeled stat lines (same shape as Draft Recap) */
       .dv-header, .draft-value-row { flex-wrap: wrap; row-gap: 4px; min-width: 0; }
       .dv-player { flex: 1 1 100%; width: 100%; min-width: 0; order: 1; }
       .dv-team { flex: 1 1 100%; width: 100%; order: 2; text-align: left; font-size: 12px; color: var(--muted); }
-      .dv-pts, .dv-rank, .dv-draft, .dv-diff, .dv-value { order: 3; width: auto; flex: 1; text-align: center; }
+      .dv-pts, .dv-rank, .dv-draft, .dv-diff, .dv-value { width: auto; flex: none; text-align: left; }
+      .draft-value-row > .stat-group:nth-of-type(1) { order: 3; }
+      .draft-value-row > .stat-group:nth-of-type(2) { order: 4; }
 
-      /* Draft recap stats block: full-width row of its own, below player/team */
+      /* Draft recap stats block: two labeled lines, below player/team/pos */
       .draft-pick-stats {
         order: 5; flex: 1 1 100%; width: 100%;
-        padding-left: 40px; margin-top: 2px; gap: 8px;
+        padding-left: 40px; margin-top: 4px;
+        display: flex; flex-direction: column; gap: 4px;
       }
+
+      .stat-group { display: flex; flex: 1 1 100%; width: 100%; gap: 10px; flex-wrap: wrap; }
+      .draft-pick-stats .stat-group { flex: none; }
+      .mobile-label { display: inline; color: var(--muted); font-weight: 600; }
       .dv-header { display: none; }
     }
 
@@ -1782,11 +1791,15 @@ function draftPickRowHTML([rnd, roundPick, team, player, position, proTeam, poin
     const valueClass = value > 0 ? 'w' : value < 0 ? 'l' : '';
     statsHtml = `
           <span class="draft-pick-stats">
-            <span class="dv-pts">${points.toFixed(2)}</span>
-            <span class="dv-rank">${posLabel}${seasonRank}</span>
-            <span class="dv-draft">${posLabel}${draftRank}</span>
-            <span class="dv-diff ${diffClass}">${diffText}</span>
-            <span class="dv-value ${valueClass}">${valueText}</span>
+            <span class="stat-group">
+              <span class="dv-rank"><span class="mobile-label">Finished: </span>${posLabel}${seasonRank}</span>
+              <span class="dv-draft"><span class="mobile-label">Drafted: </span>${posLabel}${draftRank}</span>
+              <span class="dv-diff ${diffClass}"><span class="mobile-label">Difference: </span>${diffText}</span>
+            </span>
+            <span class="stat-group">
+              <span class="dv-pts"><span class="mobile-label">Points: </span>${points.toFixed(2)}</span>
+              <span class="dv-value ${valueClass}"><span class="mobile-label">Difference: </span>${valueText}</span>
+            </span>
           </span>`;
   }
   return `
@@ -2113,11 +2126,15 @@ function renderDraftValue(year) {
       rowEl.innerHTML = `
         <span class="dv-player">${row.player}</span>
         <span class="dv-team">${teamName}</span>
-        <span class="dv-pts">${row.points.toFixed(2)}</span>
-        <span class="dv-rank">${posLabel}${row.seasonRank}</span>
-        <span class="dv-draft">${hasDraft ? posLabel + row.draftRank : '—'}</span>
-        <span class="dv-diff ${diffClass}">${diffText}</span>
-        <span class="dv-value ${valueClass}">${valueText}</span>`;
+        <span class="stat-group">
+          <span class="dv-rank"><span class="mobile-label">Finished: </span>${posLabel}${row.seasonRank}</span>
+          <span class="dv-draft"><span class="mobile-label">Drafted: </span>${hasDraft ? posLabel + row.draftRank : '—'}</span>
+          <span class="dv-diff ${diffClass}"><span class="mobile-label">Difference: </span>${diffText}</span>
+        </span>
+        <span class="stat-group">
+          <span class="dv-pts"><span class="mobile-label">Points: </span>${row.points.toFixed(2)}</span>
+          <span class="dv-value ${valueClass}"><span class="mobile-label">Difference: </span>${valueText}</span>
+        </span>`;
       scroll.appendChild(rowEl);
     });
   });
