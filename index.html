@@ -407,12 +407,14 @@
     /* Data spans were regrouped in the DOM (Rank,Draft,Diff,Pts) so mobile can line-break
        them into "Finished/Drafted/Difference" + "Points/Difference". On desktop, .stat-group's
        display:contents flattens that grouping, so without explicit order the visual sequence
-       would follow DOM order instead of the header's Pts/Rank/Draft/Diff/Value order. Pin it. */
-    #draftValueBoard .dv-pts { order: 1; }
-    #draftValueBoard .dv-rank { order: 2; }
-    #draftValueBoard .dv-draft { order: 3; }
-    #draftValueBoard .dv-diff { order: 4; }
-    #draftValueBoard .dv-value { order: 5; }
+       would follow DOM order instead of the header's Pts/Rank/Draft/Diff/Value order. Pin it,
+       for both the flat draft-value-row layout (Draft Value card) and the draft-pick-stats
+       layout (Draft Recaps + Best/Worst Draft Value cards, which share draftPickRowHTML). */
+    #draftValueBoard .dv-pts, .draft-pick-stats .dv-pts { order: 1; }
+    #draftValueBoard .dv-rank, .draft-pick-stats .dv-rank { order: 2; }
+    #draftValueBoard .dv-draft, .draft-pick-stats .dv-draft { order: 3; }
+    #draftValueBoard .dv-diff, .draft-pick-stats .dv-diff { order: 4; }
+    #draftValueBoard .dv-value, .draft-pick-stats .dv-value { order: 5; }
 
     /* ── Chart ── */
     .chart-wrap { position: relative; width: 100%; height: 240px; }
@@ -646,10 +648,14 @@
     }
     .brand-logo-text { font-family: Inter, ui-sans-serif, system-ui; font-weight: 900; font-size: 17px; color: var(--gold); letter-spacing: -0.01em; white-space: nowrap; }
   .dv-kept { width: 150px; text-align: right; flex-shrink: 0; font-weight: 700; color: var(--text2); white-space: nowrap; }
+  .dv-posrank { width: 80px; text-align: right; flex-shrink: 0; font-weight: 700; color: var(--text2); }
+  .dv-ovrpick { width: 110px; text-align: right; flex-shrink: 0; color: var(--text2); white-space: nowrap; }
   .kp-origin { display: none; }
   @media (max-width: 640px) {
     .dv-kept { order: 2; flex: 1 1 100%; width: 100%; text-align: left; white-space: normal; }
     #keeperChainsBoard .draft-pick-meta { display: none; }
+    #keeperChainsBoard .dv-posrank { display: none; }
+    #keeperChainsBoard .dv-ovrpick { display: none; }
     #keeperChainsBoard .dv-pts { order: 3; }
     #keeperChainsBoard .dv-value { order: 3; }
     #keeperChainsBoard .kp-origin {
@@ -1940,6 +1946,8 @@ function keeperChainHeaderHTML() {
       <span class="dv-team">Team</span>
       <span class="draft-pick-meta">Pos</span>
       <span class="dv-kept">Kept</span>
+      <span class="dv-posrank">Pos Rank</span>
+      <span class="dv-ovrpick">Ovr Pick</span>
       <span class="dv-pts">Total Pts</span>
       <span class="dv-value">Total Value</span>`;
 }
@@ -1956,6 +1964,8 @@ function keeperChainRowHTML(k) {
       <span class="dv-team">${k.team}</span>
       <span class="draft-pick-meta">${posLabel}</span>
       <span class="dv-kept">${span} &middot; ${k.yearsKept}yr</span>
+      <span class="dv-posrank">${posLabel}${k.originDraftRank}</span>
+      <span class="dv-ovrpick">${originPick} (${k.startYear})</span>
       <span class="dv-pts"><span class="mobile-label">Points: </span>${k.totalPoints.toFixed(1)}</span>
       <span class="dv-value ${valueClass}"><span class="mobile-label">Difference: </span>${valueText}</span>
       <span class="kp-origin">Originally Drafted as: <b>${posLabel}${k.originDraftRank}</b> &middot; Ovr Pick: <b>${originPick}</b> (${k.startYear})</span>`;

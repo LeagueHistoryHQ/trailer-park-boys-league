@@ -129,10 +129,14 @@ html = html.replace(
     "  .brand-logo-text { font-family: Inter, ui-sans-serif, system-ui; font-weight: 900; font-size: 17px; "
     "color: var(--gold); letter-spacing: -0.01em; white-space: nowrap; }\n"
     "  .dv-kept { width: 150px; text-align: right; flex-shrink: 0; font-weight: 700; color: var(--text2); white-space: nowrap; }\n"
+    "  .dv-posrank { width: 80px; text-align: right; flex-shrink: 0; font-weight: 700; color: var(--text2); }\n"
+    "  .dv-ovrpick { width: 110px; text-align: right; flex-shrink: 0; color: var(--text2); white-space: nowrap; }\n"
     "  .kp-origin { display: none; }\n"
     "  @media (max-width: 640px) {\n"
     "    .dv-kept { order: 2; flex: 1 1 100%; width: 100%; text-align: left; white-space: normal; }\n"
     "    #keeperChainsBoard .draft-pick-meta { display: none; }\n"
+    "    #keeperChainsBoard .dv-posrank { display: none; }\n"
+    "    #keeperChainsBoard .dv-ovrpick { display: none; }\n"
     "    #keeperChainsBoard .dv-pts { order: 3; }\n"
     "    #keeperChainsBoard .dv-value { order: 3; }\n"
     "    #keeperChainsBoard .kp-origin {\n"
@@ -220,6 +224,8 @@ keeper_js = """function keeperChainHeaderHTML() {
       <span class="dv-team">Team</span>
       <span class="draft-pick-meta">Pos</span>
       <span class="dv-kept">Kept</span>
+      <span class="dv-posrank">Pos Rank</span>
+      <span class="dv-ovrpick">Ovr Pick</span>
       <span class="dv-pts">Total Pts</span>
       <span class="dv-value">Total Value</span>`;
 }
@@ -236,6 +242,8 @@ function keeperChainRowHTML(k) {
       <span class="dv-team">${k.team}</span>
       <span class="draft-pick-meta">${posLabel}</span>
       <span class="dv-kept">${span} &middot; ${k.yearsKept}yr</span>
+      <span class="dv-posrank">${posLabel}${k.originDraftRank}</span>
+      <span class="dv-ovrpick">${originPick} (${k.startYear})</span>
       <span class="dv-pts"><span class="mobile-label">Points: </span>${k.totalPoints.toFixed(1)}</span>
       <span class="dv-value ${valueClass}"><span class="mobile-label">Difference: </span>${valueText}</span>
       <span class="kp-origin">Originally Drafted as: <b>${posLabel}${k.originDraftRank}</b> &middot; Ovr Pick: <b>${originPick}</b> (${k.startYear})</span>`;
