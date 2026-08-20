@@ -404,16 +404,16 @@
     .dv-diff { font-weight: 800; }
     .stat-group { display: contents; }
     .mobile-label { display: none; }
-    /* Data spans were regrouped in the DOM (Rank,Draft,Diff,Pts) so mobile can line-break
-       them into "Finished/Drafted/Difference" + "Points/Difference". On desktop, .stat-group's
-       display:contents flattens that grouping, so without explicit order the visual sequence
-       would follow DOM order instead of the header's Pts/Rank/Draft/Diff/Value order. Pin it,
-       for both the flat draft-value-row layout (Draft Value card) and the draft-pick-stats
-       layout (Draft Recaps + Best/Worst Draft Value cards, which share draftPickRowHTML). */
-    #draftValueBoard .dv-pts, .draft-pick-stats .dv-pts { order: 1; }
-    #draftValueBoard .dv-rank, .draft-pick-stats .dv-rank { order: 2; }
-    #draftValueBoard .dv-draft, .draft-pick-stats .dv-draft { order: 3; }
-    #draftValueBoard .dv-diff, .draft-pick-stats .dv-diff { order: 4; }
+    /* Explicit desktop column order for Draft Recaps, Draft Value, and Best/Worst Draft
+       Value (shared classes across the flat draft-value-row layout and the draft-pick-stats
+       layout) -- Rank, Draft Pick, +/- Rank, Pts, Value. Since header and data spans share
+       these classes, changing the numbers here repositions both consistently; no HTML edits
+       needed. This also keeps header/data in sync regardless of how the data spans are
+       grouped in the DOM for mobile's line-breaking (see .stat-group below). */
+    #draftValueBoard .dv-pts, .draft-pick-stats .dv-pts { order: 4; }
+    #draftValueBoard .dv-rank, .draft-pick-stats .dv-rank { order: 1; }
+    #draftValueBoard .dv-draft, .draft-pick-stats .dv-draft { order: 2; }
+    #draftValueBoard .dv-diff, .draft-pick-stats .dv-diff { order: 3; }
     #draftValueBoard .dv-value, .draft-pick-stats .dv-value { order: 5; }
 
     /* ── Chart ── */
