@@ -166,6 +166,9 @@ html = html.replace(
     f'<div class="tile-num"><div class="n">{top_eff}%</div><div class="l">Top Efficiency</div></div>\n          <div class="tile-num"><div class="n">{seasons_count}</div><div class="l">Seasons</div></div>',
 )
 
+# ---- Draft Value card heading ----
+html = html.replace("<h2>\U0001F4CA Draft Value</h2>", "<h2>\U0001F4CA Draft Value (Top 10 Scorers)</h2>")
+
 # ---- Draft Value empty-state guard ----
 old_init = """function initDraftRecap() {
   populateDraftSeasonSelect();"""
