@@ -129,6 +129,9 @@ html = html.replace(
     "  .brand-logo-text { font-family: Inter, ui-sans-serif, system-ui; font-weight: 900; font-size: 17px; "
     "color: var(--gold); letter-spacing: -0.01em; white-space: nowrap; }\n"
     "  .dv-kept { width: 150px; text-align: right; flex-shrink: 0; font-weight: 700; color: var(--text2); white-space: nowrap; }\n"
+    "  @media (max-width: 640px) {\n"
+    "    .dv-kept { order: 2; flex: 1 1 100%; width: 100%; text-align: left; white-space: normal; }\n"
+    "  }\n"
     "</style>\n</head>",
 )
 
