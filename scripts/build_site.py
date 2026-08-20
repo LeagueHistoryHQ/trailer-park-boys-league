@@ -129,8 +129,17 @@ html = html.replace(
     "  .brand-logo-text { font-family: Inter, ui-sans-serif, system-ui; font-weight: 900; font-size: 17px; "
     "color: var(--gold); letter-spacing: -0.01em; white-space: nowrap; }\n"
     "  .dv-kept { width: 150px; text-align: right; flex-shrink: 0; font-weight: 700; color: var(--text2); white-space: nowrap; }\n"
+    "  .kp-origin { display: none; }\n"
     "  @media (max-width: 640px) {\n"
     "    .dv-kept { order: 2; flex: 1 1 100%; width: 100%; text-align: left; white-space: normal; }\n"
+    "    #keeperChainsBoard .draft-pick-meta { display: none; }\n"
+    "    #keeperChainsBoard .dv-pts { order: 3; }\n"
+    "    #keeperChainsBoard .dv-value { order: 3; }\n"
+    "    #keeperChainsBoard .kp-origin {\n"
+    "      display: block; order: 4; flex: 1 1 100%; width: 100%; margin-top: 2px;\n"
+    "      font-size: 12px; color: var(--muted);\n"
+    "    }\n"
+    "    #keeperChainsBoard .kp-origin b { color: var(--text2); font-weight: 700; }\n"
     "  }\n"
     "</style>\n</head>",
 )
@@ -221,13 +230,15 @@ function keeperChainRowHTML(k) {
   const valueText = k.cumulativeValue > 0 ? `+${k.cumulativeValue.toFixed(2)}` : k.cumulativeValue.toFixed(2);
   const valueClass = k.cumulativeValue > 0 ? 'w' : k.cumulativeValue < 0 ? 'l' : '';
   const note = k.leftCensored ? ' <span style="color:var(--muted);font-size:10px">(kept before 2019)</span>' : '';
+  const originPick = `${k.originRound}.${String(k.originRoundPick).padStart(2, '0')}`;
   return `
       <span class="dv-player">${k.player}${note}</span>
       <span class="dv-team">${k.team}</span>
       <span class="draft-pick-meta">${posLabel}</span>
       <span class="dv-kept">${span} &middot; ${k.yearsKept}yr</span>
-      <span class="dv-pts">${k.totalPoints.toFixed(1)}</span>
-      <span class="dv-value ${valueClass}">${valueText}</span>`;
+      <span class="dv-pts"><span class="mobile-label">Points: </span>${k.totalPoints.toFixed(1)}</span>
+      <span class="dv-value ${valueClass}"><span class="mobile-label">Difference: </span>${valueText}</span>
+      <span class="kp-origin">Originally Drafted as: <b>${posLabel}${k.originDraftRank}</b> &middot; Ovr Pick: <b>${originPick}</b> (${k.startYear})</span>`;
 }
 
 function renderKeeperChains() {

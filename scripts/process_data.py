@@ -717,13 +717,15 @@ for c in keeper_chains:
     KEEPER_CHAINS_DATA.append({
         "player": c["name"], "pos": c["pos"],
         "team": seasons[-1]["team"], "manager": seasons[-1]["manager"],
-        "originRound": seasons[0]["round"], "startYear": c["originYear"], "endYear": c["lastYear"],
+        "originRound": seasons[0]["round"], "originRoundPick": seasons[0]["roundPick"],
+        "originDraftRank": seasons[0]["draftRank"], "startYear": c["originYear"], "endYear": c["lastYear"],
         "totalSeasons": len(seasons), "yearsKept": years_kept,
         "totalPoints": cum_points, "cumulativeValue": cum_value,
         "leftCensored": c["leftCensored"],
         "seasonDetail": [
             {"year": s["year"], "team": s["team"], "round": s["round"], "roundPick": s["roundPick"],
-             "isKeeper": s["isKeeper"], "points": s["points"], "seasonRank": s["seasonRank"], "value": s["value"]}
+             "draftRank": s["draftRank"], "isKeeper": s["isKeeper"], "points": s["points"],
+             "seasonRank": s["seasonRank"], "value": s["value"]}
             for s in seasons
         ],
     })
