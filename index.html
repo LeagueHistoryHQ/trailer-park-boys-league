@@ -404,6 +404,15 @@
     .dv-diff { font-weight: 800; }
     .stat-group { display: contents; }
     .mobile-label { display: none; }
+    /* Data spans were regrouped in the DOM (Rank,Draft,Diff,Pts) so mobile can line-break
+       them into "Finished/Drafted/Difference" + "Points/Difference". On desktop, .stat-group's
+       display:contents flattens that grouping, so without explicit order the visual sequence
+       would follow DOM order instead of the header's Pts/Rank/Draft/Diff/Value order. Pin it. */
+    #draftValueBoard .dv-pts { order: 1; }
+    #draftValueBoard .dv-rank { order: 2; }
+    #draftValueBoard .dv-draft { order: 3; }
+    #draftValueBoard .dv-diff { order: 4; }
+    #draftValueBoard .dv-value { order: 5; }
 
     /* ── Chart ── */
     .chart-wrap { position: relative; width: 100%; height: 240px; }
