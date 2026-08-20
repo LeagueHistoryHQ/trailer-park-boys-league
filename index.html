@@ -222,6 +222,7 @@
     .rafters-arrow-left { left: -4px; }
     .rafters-arrow-right { right: -4px; }
     .rafters-arrow.is-hidden { opacity: 0; pointer-events: none; }
+    .champions-more-btn { display: none; }
     .banner {
       position: relative; flex-shrink: 0; min-width: 138px;
       padding-top: 22px;
@@ -572,6 +573,13 @@
       .banner::before, .banner::after { display: none; }
       .banner-body { padding: 14px 10px 22px; }
       .champ-name { font-size: 13px; }
+      .champions-row.is-collapsed > .banner:nth-child(n+5) { display: none; }
+      .champions-more-btn {
+        width: 100%; margin-top: 4px; padding: 10px;
+        background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: var(--r-sm);
+        color: var(--text2); font-weight: 700; font-size: 13px; cursor: pointer; text-align: center;
+      }
+      .champions-more-btn:active { background: rgba(255,255,255,0.08); }
 
       /* Quick-nav tiles: 2x2 grid instead of a single stacked column */
       .tile-grid {
@@ -608,7 +616,7 @@
         order: 5; flex: 1 1 100%; width: 100%;
         padding-left: 40px; margin-top: 2px; gap: 8px;
       }
-      .draft-pick-row.dv-header { display: none; }
+      .dv-header { display: none; }
     }
 
     /* ── Transitions ── */
@@ -672,6 +680,7 @@
         <div class="champions-row" id="champRow"></div>
         <button class="rafters-arrow rafters-arrow-right is-hidden" id="champScrollRight" aria-label="Show more champions">›</button>
       </div>
+      <button class="champions-more-btn" id="champMoreBtn"></button>
     </div>
 
     <!-- Quick-nav tiles -->
@@ -1098,6 +1107,7 @@ mobileMenu.querySelectorAll('.mobile-menu-item').forEach(btn => {
 function renderChampions() {
   const el = document.getElementById('champRow');
   el.innerHTML = '';
+  el.classList.add('is-collapsed'); // mobile starts collapsed to 4; no-op on desktop (rule is mobile-scoped)
   const sorted = [...DATA.seasons].sort((a, b) => b.year - a.year);
   sorted.forEach((s, i) => {
     const d = document.createElement('div');
@@ -1128,11 +1138,32 @@ function layoutChampionsScroller() {
   const row = document.getElementById('champRow');
   const leftBtn = document.getElementById('champScrollLeft');
   const rightBtn = document.getElementById('champScrollRight');
+  const moreBtn = document.getElementById('champMoreBtn');
   if (!row || !leftBtn || !rightBtn) return;
 
   const isDesktop = window.matchMedia('(min-width: 641px)').matches;
   const banners = [...row.children];
-  if (!isDesktop || banners.length <= 4) {
+
+  if (!isDesktop) {
+    row.style.width = '';
+    row.classList.remove('is-paged');
+    row.scrollLeft = 0;
+    leftBtn.classList.add('is-hidden');
+    rightBtn.classList.add('is-hidden');
+    if (moreBtn) {
+      if (banners.length > 4) {
+        moreBtn.style.display = 'block';
+        const collapsed = row.classList.contains('is-collapsed');
+        moreBtn.textContent = collapsed ? `▾ More Champions (${banners.length - 4})` : '▴ Show Fewer';
+      } else {
+        moreBtn.style.display = 'none';
+      }
+    }
+    return;
+  }
+
+  if (moreBtn) moreBtn.style.display = 'none';
+  if (banners.length <= 4) {
     row.style.width = '';
     row.classList.remove('is-paged');
     row.scrollLeft = 0;
@@ -1169,6 +1200,14 @@ function initChampionsScroller() {
   rightBtn.addEventListener('click', () => step(1));
   row.addEventListener('scroll', updateChampionsArrows);
   window.addEventListener('resize', layoutChampionsScroller);
+
+  const moreBtn = document.getElementById('champMoreBtn');
+  if (moreBtn) {
+    moreBtn.addEventListener('click', () => {
+      row.classList.toggle('is-collapsed');
+      layoutChampionsScroller();
+    });
+  }
 }
 
 /* — Season table — */
